@@ -1,0 +1,51 @@
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<script src="js/jquery/2.0.0/jquery.min.js"></script>
+<script src="js/qrcode/jquery.qrcode.min.js"></script>
+
+</head> 
+
+<div style="width:800px;margin:50px auto;text-align:center">
+
+把字符串:&nbsp; 
+<input type="text" name="textqr" id="textqr"/>
+&nbsp;转换为二维码
+<br/><br/>
+
+<button type="button" onclick="qr()">点击生成二维码</button><br/><br/><br/>
+<div id="qrcode"></div>
+
+</div>
+
+
+<script>
+//生成二维码 其中的canvas还可以换成 table,用于在不支持html5的浏览器中使用。
+function qr(){
+	$('#qrcode').empty();
+	var textqrStr = $('#textqr').val();
+	textqrStr = utf16to8(textqrStr);
+	//alert(textqrStr);
+	$('#qrcode').qrcode({render:'canvas',text:textqrStr,width:260,height:260});	
+}
+//转码，用以显示中文。
+function utf16to8(str) { 
+    var out, i, len, c; 
+    out = ""; 
+    len = str.length; 
+    for(i = 0; i < len; i++) { 
+    c = str.charCodeAt(i); 
+    if ((c >= 0x0001) && (c <= 0x007F)) { 
+        out += str.charAt(i); 
+    } else if (c > 0x07FF) { 
+        out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F)); 
+        out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F)); 
+        out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F)); 
+    } else { 
+        out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F)); 
+        out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F)); 
+    } 
+    } 
+    return out; 
+}
+</script>
