@@ -7,57 +7,60 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * SendEmail静态类的Send方法用于发送邮件
+ * SendEmail.Send(EmailAccount, EmailPassword, receiveMail, userRemarks, senderName, subjectText, mailText);
+ * @author hao
+ *
+ */
 public class SendEmail {
-
-	//https://www.cnblogs.com/xmqa/p/8458300.html
+	// https://www.cnblogs.com/xmqa/p/8458300.html
 	// 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）
 	// PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
 	// 对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
-	public static String myEmailAccount = "myEmailAccount";
-	public static String myEmailPassword = "myEmailPassword";
+	// public static String myEmailAccount = "myEmailAccount";
+	// public static String myEmailPassword = "myEmailPassword";
 
 	// 发件人邮箱的 SMTP 服务器地址, 必须准确, 不同邮件服务器地址不同, 一般(只是一般, 绝非绝对)格式为: smtp.xxx.com
 	// 网易yeah邮箱的 SMTP 服务器地址为: smtp.yeah.net
 	public static String myEmailSMTPHost = "smtp.yeah.net";
 
 	// 收件人邮箱（替换为自己知道的有效邮箱）
-	public static String receiveMailAccount = "receiveMailAccount";
-
-	public static void main(String[] args) throws Exception {
-
-	}
+	// public static String receiveMailAccount = "receiveMailAccount";
 
 	/**
-	 * 创建一封只包含文本的简单邮件
+	 * 创建邮件对象
 	 *
 	 * @param session
 	 *            和服务器交互的会话
 	 * @param receiveMail
 	 *            收件人邮箱
 	 * @param userRemarks
-	 *    		  用户备注
-	 * @param SenderName
+	 *            用户备注
+	 * @param senderName
 	 *            发件人昵称
-	 * @param SubjectText
+	 * @param subjectText
 	 *            主题
 	 * @param MailText
 	 *            邮件正文
+	 * @param EmailAccount
+	 *            发件人邮箱
 	 * @return
 	 * @throws Exception
 	 */
-	public static MimeMessage createMimeMessage(Session session, String receiveMail, String userRemarks, String SenderName,
-			String SubjectText, String MailText) throws Exception {
+	public static MimeMessage createMimeMessage(Session session, String receiveMail, String userRemarks,
+			String senderName, String subjectText, String MailText, String EmailAccount) throws Exception {
 		// 1. 创建一封邮件
 		MimeMessage message = new MimeMessage(session);
 
 		// 2. From: 发件人
-		message.setFrom(new InternetAddress(myEmailAccount, SenderName, "UTF-8"));
+		message.setFrom(new InternetAddress(EmailAccount, senderName, "UTF-8"));
 
 		// 3. To: 收件人（可以增加多个收件人、抄送、密送）
 		message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, userRemarks, "UTF-8"));
 
 		// 4. Subject: 邮件主题
-		message.setSubject(SubjectText, "UTF-8");
+		message.setSubject(subjectText, "UTF-8");
 
 		// 5. Content: 邮件正文（可以使用html标签）
 		message.setContent(MailText, "text/html;charset=UTF-8");
@@ -73,20 +76,25 @@ public class SendEmail {
 	/**
 	 * * 创建一封只包含文本的简单邮件
 	 *
+	 * @param EmailAccount
+	 * 			  发件人邮箱账户  -- 需开通POP3、IMAP服务
+	 * @param EmailPassword
+	 * 			  发件人邮箱密码
 	 * @param receiveMail
 	 *            收件人邮箱
 	 * @param userRemarks
-	 *    		  用户备注
-	 * @param SenderName
+	 *            用户备注
+	 * @param senderName
 	 *            发件人昵称
-	 * @param SubjectText
+	 * @param subjectText
 	 *            主题
-	 * @param MailText
+	 * @param mailText
 	 *            邮件正文
 	 * @return
 	 * @throws Exception
 	 */
-	public static void Send(String receiveMail, String userRemarks, String SenderName, String SubjectText, String MailText) {
+	public static void Send(String EmailAccount, String EmailPassword, String receiveMail, String userRemarks,
+			String senderName, String subjectText, String mailText) {
 		try {
 			// 1. 创建参数配置, 用于连接邮件服务器的参数配置
 			Properties props = new Properties(); // 参数配置
@@ -113,7 +121,8 @@ public class SendEmail {
 			session.setDebug(true);
 
 			// 3. 创建一封邮件
-			MimeMessage message = createMimeMessage(session,receiveMail, userRemarks, SenderName, SubjectText, MailText);
+			MimeMessage message = createMimeMessage(session, receiveMail, userRemarks, senderName, subjectText,
+					mailText, EmailAccount);
 
 			// 4. 根据 Session 获取邮件传输对象
 			Transport transport = session.getTransport();
@@ -131,7 +140,7 @@ public class SendEmail {
 			// (4) 请求过于频繁或其他原因, 被邮件服务器拒绝服务;
 			// (5) 如果以上几点都确定无误, 到邮件服务器网站查找帮助。
 			//
-			transport.connect(myEmailAccount, myEmailPassword);
+			transport.connect(EmailAccount, EmailPassword);
 
 			// 6. 发送邮件, 发到所有的收件地址, message.getAllRecipients() 获取到的是在创建邮件对象时添加的所有收件人, 抄送人,
 			// 密送人
