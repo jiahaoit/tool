@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Java实现邮箱验证之注册验证页面</title>
+    <!--导入外部的CSS文件-->
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    <script type="text/javascript">
+        function validatePassword() {
+            var passElement=document.getElementById("pass");
+            var msgElement=document.getElementById("passMsg");
+            if(passElement.value==""){
+               passElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>密码不能为空!</span>";
+                return false;
+            }
+            if(/^\w{6,20}$/.test(passElement.value)){
+                passElement.className="right";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:green'>密码输入格式正确!</span>";
+                return true;
+            }
+            else{
+                passElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>密码长度应该在6-20之间!</span>";
+                return false;
+            }
+        }
+        function validateRePassword() {
+            var passElement=document.getElementById("pass");
+            var repassElement=document.getElementById("repass");
+            var msgElement=document.getElementById("repassMsg");
+            if(repassElement.value==""){
+                passElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>密码不能为空!</span>";
+                return false;
+            }
+            if(!(/^\w{6,20}$/.test(repassElement.value))){
+                repassElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>密码长度应该在6-20之间!</span>";
+                return false;
+            }
+            if(passElement.value==repassElement.value){
+                repassElement.className="right";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:green'>两次密码一致!</span>";
+                return true;
+            }
+            else{
+                repassElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>两次密码不一致!</span>";
+                return false;
+            }
+        }
+        function validateEmpty(elementName) {
+            var objElement=document.getElementById(elementName);
+            var msgElement=document.getElementById(elementName+"Msg");
+            if (objElement.value!="") {   //不为空
+                objElement.className="right";
+                msgElement.innerHTML="<span style='color:green'>输入内容正确!</span>";
+                return true;
+            }else{
+                objElement.className="wrong";
+                msgElement.innerHTML="<span style='color:red'>输入内容错误!</span>";
+                return false;
+            }
+        }
+        function validateRepeat(srcName,desName) {    //确定密码与确认密码是否一致
+            var srcElement=document.getElementById(srcName);
+            var desElement=document.getElementById(desName);
+            var msgElement=document.getElementById(desName+"Msg");
+            if (srcElement.value==desElement.value){
+                desElement.className="right";
+                msgElement.innerHTML="<span style='color:green'>输入内容相同!</span>";
+                return true;
+            }else{
+                desElement.className="wrong";
+                msgElement.innerHTML="<span style='color:red'>输入内容不相同!</span>";
+                return false;
+            }
+        }
+        function validatePass() {   //验证密码是否为空
+            return validateEmpty("pass");
+        }
+        function validateRepass() {  //验证两次密码是否相同
+            if(validateEmpty("repass")) {  //确认密码不为空
+                return validateRepeat("pass", "repass"); //验证密码是否一致
+            }
+            return false;//确认密码为空，直接返回false
+        }
+        function validateName() {
+            var nameElement=document.getElementById("name");
+            var msgElement=document.getElementById("nameMsg");
+            if(nameElement.value==""){
+                nameElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>用户名不能为空!</span>";
+                return false;
+            }
+            else{
+            	nameElement.className="right";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:green'>用户名输入格式正确!</span>";
+                return true;
+            }
+        }
+        function validateEmail() {
+            var emailElement=document.getElementById("email");
+            var msgElement=document.getElementById("emailMsg");
+            if(emailElement.value==""){
+                emailElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>邮箱不能为空!</span>";
+                return false;
+            }
+            if(/^\w+@\w+\.\w+$/.test(emailElement.value)){
+                emailElement.className="right";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:green'>邮箱输入正确!</span>";
+                return true;
+            }else{
+                emailElement.className="wrong";//获取元素对象的class属性
+                msgElement.innerHTML="<span style='color:red'>邮箱输入格式错误!</span>";
+                return false;
+            }
+        }
+        function validate() {
+            return validateName()&&validatePassword()&&validateRePassword()&&validateEmail();
+        }
+    </script>
+</head>
+<body>
+<!--要想对表单进行拦截，就必须使用onsubmit事件，这个事件是在form元素上定义的
+    表示进行表单提交时触发，如果需要对表单拦截，那么就要在onsubmit函数上返回false,如果正常执行
+    则返回true
+        onfucus：获得焦点事件，默认是当鼠标经过标签时就获得了焦点
+        onblur:当鼠标离开时失去焦点
+-->
+<form id="myform" action="/tool/RegisterServlet" method="post" cellpadding="5" cellspacing="0" bgcolor="#F2F2F2" align="center" onsubmit="return validate();">
+    <table>
+        <tr>
+            <td colspan="2" style="font-size: larger" align="center">用户注册</td>
+        </tr>
+        <tr>
+            <td>用户名</td>
+            <td><input type="text" id="name" name="name" onblur="validateName();" class="init"/></td>
+            <td><span id="nameMsg"></span></td>
+        </tr>
+        <tr>
+            <td>密&nbsp;&nbsp;&nbsp;&nbsp;码</td>
+            <td><input type="password" name="pass" id="pass" onblur="validatePassword();" class="init"/></td>
+            <td> <span id="passMsg"></span></td>
+        </tr>
+        <tr>
+            <td>确认密码</td>
+            <td><input type="password" name="repass" id="repass" onblur="validateRePassword();" class="init"/></td>
+            <td><span id="repassMsg"></span></td>
+        </tr>
+        <tr>
+            <td>性&nbsp;&nbsp;&nbsp;&nbsp;别</td>
+            <td>
+                <input type="radio" name="sex" id="sex" value="男">男&nbsp;&nbsp;
+                <input type="radio" name="sex" id="sex" value="女">女
+            </td>
+        </tr>
+        <tr>
+            <td>岗&nbsp;&nbsp;&nbsp;&nbsp;位</td>
+            <td>
+                <input type="checkbox" name="like" id="like" value="font">前端工程师
+                <input type="checkbox" name="like" id="like" value="rear">后端工程师
+                <input type="checkbox" name="like" id="like" value="andr">安卓工程师
+                <input type="checkbox" name="like" id="like" value="linux">运维工程师
+            </td>
+        </tr>
+        <tr>
+            <td>邮&nbsp;&nbsp;&nbsp;&nbsp;箱</td>
+            <td><input type="text" name="email" id="email" value="" class="init" onblur="validateEmail();"></td>
+            <td><span id="emailMsg"></span></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button type="submit">注册</button>&nbsp;&nbsp;
+                <button type="reset">清空</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
