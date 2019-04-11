@@ -95,7 +95,7 @@ public class DBDao {
 	}
 	
 	/**
-	 * 增加一个,传入test_id ,number
+	 * 修改一个,传入test_id ,number
 	 */
 	public int update(TestDBModel testDBModel) {
 		Connection conn = null;
@@ -115,7 +115,7 @@ public class DBDao {
 	}
 	
 	/**
-	 * 增加一个,传入test_id 
+	 * 删除一个,传入test_id 
 	 */
 	public int delete(int test_id) {
 		Connection conn = null;
