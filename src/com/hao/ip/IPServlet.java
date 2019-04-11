@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 返回访问者IP - IPServlet
  */
-@WebServlet("/")
+@WebServlet("/ip")
 public class IPServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
