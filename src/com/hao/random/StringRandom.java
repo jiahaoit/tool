@@ -1,6 +1,7 @@
 package com.hao.random;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 生成可控制位数的随机数字和字母混合序列码
@@ -34,10 +35,14 @@ public class StringRandom {
 		}
 		return val;
 	}
+	
+	public static String getUUID() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
 
 	public static void main(String[] args) {
-		StringRandom test = new StringRandom();
 		// 测试
-		System.out.println(test.getStringRandom(8));
+		System.out.println(StringRandom.getStringRandom(8));
+		System.out.println(StringRandom.getUUID());
 	}
 }
